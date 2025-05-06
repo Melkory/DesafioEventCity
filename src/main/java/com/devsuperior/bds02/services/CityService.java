@@ -3,8 +3,10 @@ package com.devsuperior.bds02.services;
 import com.devsuperior.bds02.dto.CityDTO;
 import com.devsuperior.bds02.entities.City;
 import com.devsuperior.bds02.repository.CityRepository;
+import com.devsuperior.bds02.services.exceptions.DataBaseException;
 import com.devsuperior.bds02.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,7 +42,12 @@ public class CityService {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Recurso não foi encontrado!");
         }
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Falha de integridade referencial!");
+        }
+
 
     }
 
