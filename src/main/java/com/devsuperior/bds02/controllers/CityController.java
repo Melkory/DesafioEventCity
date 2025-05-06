@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,14 +21,17 @@ public class CityController {
     private CityService service;
 
     @GetMapping
-    public ResponseEntity<Page<CityDTO>> findAll ( Pageable pageable ) {
-        Page<CityDTO> result = service.findAllPaged(pageable);
+    public ResponseEntity<List<CityDTO>> findAll () {
+        List<CityDTO> result = service.findAll();
         return ResponseEntity.ok(result);
     }
 
     @PostMapping
-    public CityDTO insert ( @RequestBody CityDTO dto ) {
-        return null;
+    public ResponseEntity<CityDTO> insert ( @RequestBody CityDTO dto ) {
+        dto = service.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @DeleteMapping
