@@ -3,6 +3,7 @@ package com.devsuperior.bds02.services;
 import com.devsuperior.bds02.dto.CityDTO;
 import com.devsuperior.bds02.entities.City;
 import com.devsuperior.bds02.repository.CityRepository;
+import com.devsuperior.bds02.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +37,9 @@ public class CityService {
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete (Long id) {
-
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não foi encontrado!");
+        }
         repository.deleteById(id);
 
     }
