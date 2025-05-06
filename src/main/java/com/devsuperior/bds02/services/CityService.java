@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,7 +34,10 @@ public class CityService {
         return new CityDTO(entity);
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void delete (Long id) {
+
+        repository.deleteById(id);
 
     }
 
